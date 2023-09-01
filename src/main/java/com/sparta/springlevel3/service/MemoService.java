@@ -5,6 +5,7 @@ import com.sparta.springlevel3.entity.Memo;
 import com.sparta.springlevel3.entity.UserRoleEnum;
 import com.sparta.springlevel3.repository.CommentRepository;
 import com.sparta.springlevel3.repository.MemoRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,8 @@ public class MemoService {
 
     private final MemoRepository memoRepository; // final은 무조건 생성자로 주입
     private final CommentRepository commentRepository;
+
+    private HttpServletResponse httpServletResponse;
     public MemoService(MemoRepository memoRepository, CommentRepository commentRepository) {
         this.memoRepository = memoRepository;
         this.commentRepository = commentRepository;
@@ -69,6 +72,7 @@ public class MemoService {
 
     @Transactional // updateMemo는 따로 Transactional 되어있지 않아 해줘야함
     public Memo updateMemo(Long id, MemoRequestDto requestDto, String username, UserRoleEnum role) {
+
         Memo memo = findMemo(id);
         if(role.getAuthority().equals("ROLE_ADMIN")|| memo.getUsername().equals(username) )
             memo.update(requestDto, memo.getUsername()); // update는 memo 클래스에서 만든 것

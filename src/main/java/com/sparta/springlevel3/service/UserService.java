@@ -77,12 +77,14 @@ public class UserService {
         String password = requestDto.getPassword();
 
         // 사용자 확인
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
-        );
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            return "{\"message\": \"등록된 사용자가 없습니다\", \"statusCode\": 400}";
+        }
+
 
         if (!passwordEncoder.matches(password,user.getPassword()))
-            throw new IllegalArgumentException("PW 가 일치하지 않습니다.");
+            return "{\"message\": \"PW가 일치하지 않습니다.\", \"statusCode\": 400}";
 
 
         String token = jwtUtil.createToken(user.getUsername(), user.getRole());
