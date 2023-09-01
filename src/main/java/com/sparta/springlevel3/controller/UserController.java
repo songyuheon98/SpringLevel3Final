@@ -22,16 +22,13 @@ public class UserController {
 
     @PostMapping("/user/signup")
     public ResponseEntity<String> signup(@RequestBody SignUpDto requestDto) {
-        userService.signup(requestDto);
-        String jsonResponse = "{\"msg\": \"회원가입 성공\", \"statusCode\": 200}";
-        return ResponseEntity.ok(jsonResponse);
+
+        return ResponseEntity.ok(userService.signup(requestDto));
 
     }
 
     @PostMapping("/user/login")
     public ResponseEntity<String> login(@RequestBody LoginDto requestDto, HttpServletResponse res) {
-        String jsonResponse = "{\"msg\": \"로그인 성공\", \"statusCode\": 200}";
-        userService.login(requestDto, res);
-        return ResponseEntity.ok(jsonResponse);
+        return ResponseEntity.ok(userService.login(requestDto, res));
     }
 }

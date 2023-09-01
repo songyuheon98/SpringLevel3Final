@@ -38,7 +38,7 @@ public class UserService {
         return PASSWORD_PATTERN.matcher(password).matches();
     }
 
-    public void signup(SignUpDto requestDto) {
+    public String signup(SignUpDto requestDto) {
         String username = requestDto.getUsername();
         String password = requestDto.getPassword();
         Boolean isAdmin = requestDto.getIsAdmin();
@@ -55,7 +55,7 @@ public class UserService {
         // 회원 중복 확인
         Optional<User> checkUsername = userRepository.findByUsername(username); // 쿼리 메서드 사용
         if (checkUsername.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
+            return "{\"message\": \"중복된 username 입니다\", \"statusCode\": 400}";
         }
 
         UserRoleEnum role = UserRoleEnum.USER; // 일단 일반 사용자 권한 넣어 놓음
@@ -70,9 +70,11 @@ public class UserService {
         userRepository.save(user);
 
         System.out.println("=======");
+
+        return "{\"message\": \"회원가입 성공\", \"statusCode\": 200}";
     }
 
-    public void login(LoginDto requestDto, HttpServletResponse res) {
+    public String login(LoginDto requestDto, HttpServletResponse res) {
         String username = requestDto.getUsername();
         String password = requestDto.getPassword();
 
@@ -90,6 +92,7 @@ public class UserService {
         String token = jwtUtil.createToken(user.getUsername(), user.getRole());
         jwtUtil.addJwtToCookie(token, res);
 
+        return "{\"message\": \"로그인 성공\", \"statusCode\": 200}";
     }
 
 }

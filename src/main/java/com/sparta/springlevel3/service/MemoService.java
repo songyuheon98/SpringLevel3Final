@@ -74,10 +74,15 @@ public class MemoService {
     public Memo updateMemo(Long id, MemoRequestDto requestDto, String username, UserRoleEnum role) {
 
         Memo memo = findMemo(id);
+
+        httpServletResponse.setContentType("text/html; charset=UTF-8");
+
+
         if(role.getAuthority().equals("ROLE_ADMIN")|| memo.getUsername().equals(username) )
             memo.update(requestDto, memo.getUsername()); // update는 memo 클래스에서 만든 것
         else
             throw new IllegalArgumentException("당신에겐 글을 수정할 권한이 없습니다 >.< !!");
+
 
         return memo;
     }
