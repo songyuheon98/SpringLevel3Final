@@ -1,5 +1,6 @@
 package com.sparta.springlevel3.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sparta.springlevel3.dto.MemoRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,20 +17,39 @@ import java.util.List;
 @NoArgsConstructor
 public class Memo extends Timestamped{
     @Id
+    //@JsonInclude(JsonInclude.Include.NON_NULL)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    //@JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "username", nullable = false)
     private String username;
+    //@JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "title", nullable = false)
     private String title;
+    //@JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "contents", nullable = false, length = 500)
     private String contents;
+
+//    @Transient
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
+//    private String statusCode;
+//
+//    @Transient
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
+//    private String message;
+
+
 
     public Memo(MemoRequestDto requestDto, String tokenUsername) {
         this.username = tokenUsername;
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
     }
+
+//    public Memo(String statusCode, String message) {
+//        this.statusCode = statusCode;
+//        this.message = message;
+//    }
 
 
     public void update(MemoRequestDto requestDto, String username) {
@@ -39,5 +59,7 @@ public class Memo extends Timestamped{
     }
 
     @OneToMany(mappedBy = "memo", cascade = CascadeType.REMOVE)
+
+    //@JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Comment> comments = new ArrayList<>();
 }

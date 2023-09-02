@@ -75,16 +75,13 @@ public class MemoService {
 
         Memo memo = findMemo(id);
 
-        httpServletResponse.setContentType("text/html; charset=UTF-8");
-
-
         if(role.getAuthority().equals("ROLE_ADMIN")|| memo.getUsername().equals(username) )
             memo.update(requestDto, memo.getUsername()); // update는 memo 클래스에서 만든 것
-        else
-            throw new IllegalArgumentException("당신에겐 글을 수정할 권한이 없습니다 >.< !!");
+        else {
+            return new OnlyMemo("400","당신에겐 글을 수정할 권한이 없습니다 >.< !!");
+        }
+        return new OnlyMemo(memo);
 
-
-        return memo;
     }
 
     public ResponseEntity<String>  deleteMemo(Long id, String username, UserRoleEnum role) {
