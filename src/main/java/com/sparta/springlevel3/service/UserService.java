@@ -28,7 +28,7 @@ public class UserService {
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     private static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-z0-9]{4,10}$");
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z0-9]{8,15}$");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z0-9!@#$%^&*()]{8,15}$");
 
     public static boolean isValidUsername(String username) {
         return USERNAME_PATTERN.matcher(username).matches();

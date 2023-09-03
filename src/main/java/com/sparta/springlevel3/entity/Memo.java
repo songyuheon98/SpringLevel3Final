@@ -59,7 +59,5 @@ public class Memo extends Timestamped{
     }
 
     @OneToMany(mappedBy = "memo", cascade = CascadeType.REMOVE)
-
-    //@JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Comment> comments = new ArrayList<>();
 }

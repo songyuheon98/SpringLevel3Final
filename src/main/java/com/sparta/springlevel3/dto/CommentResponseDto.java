@@ -27,8 +27,7 @@ public class CommentResponseDto { // 응답하는 Dto
         this.modifiedAt = comment.getModifiedAt();
     }
 
-    public CommentResponseDto() {
-    }
+    public CommentResponseDto() {}
 
     public CommentResponseDto(Long id, String contents, String username, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
@@ -41,5 +40,4 @@ public class CommentResponseDto { // 응답하는 Dto
     public CommentResponseDto fromComment(Comment comment) {
         return new CommentResponseDto(comment.getId(), comment.getContents(), comment.getUsername(), comment.getCreatedAt(), comment.getModifiedAt());
     }
-
 }

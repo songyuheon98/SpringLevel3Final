@@ -2,6 +2,7 @@ package com.sparta.springlevel3.service;
 
 import com.sparta.springlevel3.dto.*;
 import com.sparta.springlevel3.entity.Memo;
+import com.sparta.springlevel3.entity.OnlyMemo;
 import com.sparta.springlevel3.entity.UserRoleEnum;
 import com.sparta.springlevel3.repository.CommentRepository;
 import com.sparta.springlevel3.repository.MemoRepository;
@@ -43,26 +44,21 @@ public class MemoService {
         // DB 조회
         memoRepository.findAllByOrderById().stream() // stream 메소드를 통해 MemoResponseDto로 변환
                 .forEach(
-                memo -> { // memo MemoResponseDto로 변환
-                    MemoCommentDto temp = new MemoCommentDto(memo,
-                            commentRepository.findAllByPostidOrderById(memo.getId()).stream()
-                                    .map(n->new CommentResponseDto().fromComment(n)).toList());
-                    memoCommentResponseAllDtoList.add(new MemoCommentResponseAllDto(temp));
+                        memo -> { // memo MemoResponseDto로 변환
+                            MemoCommentDto temp = new MemoCommentDto(memo,
+                                    commentRepository.findAllByPostidOrderById(memo.getId()).stream()
+                                            .map(n->new CommentResponseDto().fromComment(n)).toList());
+                            memoCommentResponseAllDtoList.add(new MemoCommentResponseAllDto(temp));
 
-                }
+                        }
 
-        );// 메모를 리스트 타입으로 반환
+                );// 메모를 리스트 타입으로 반환
         return memoCommentResponseAllDtoList;
     }
 
-
-
     public MemoCommentResponseAllDto getOneMemo(Long id) {
-        // DB 조회
         MemoCommentResponseAllDto memoCommentResponseAllDtoList;
-        // DB 조회
         Memo tempMemo = memoRepository.findMemoById(id);
-
         MemoCommentDto temp = new MemoCommentDto(tempMemo,commentRepository.findAllByPostidOrderById(tempMemo.getId()).stream()
                         .map(n->new CommentResponseDto().fromComment(n)).toList());
 
@@ -71,7 +67,7 @@ public class MemoService {
     }
 
     @Transactional // updateMemo는 따로 Transactional 되어있지 않아 해줘야함
-    public Memo updateMemo(Long id, MemoRequestDto requestDto, String username, UserRoleEnum role) {
+    public OnlyMemo updateMemo(Long id, MemoRequestDto requestDto, String username, UserRoleEnum role) {
 
         Memo memo = findMemo(id);
 
@@ -99,7 +95,4 @@ public class MemoService {
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")
         );
     }
-
-
-
 }
