@@ -6,6 +6,9 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 
+/**
+ * 클라이언트에게 반환할 메모 정보를 담은 DTO
+ */
 @Getter
 public class MemoResponseDto { // 응답하는 Dto
     @JsonInclude(JsonInclude.Include.NON_NULL)

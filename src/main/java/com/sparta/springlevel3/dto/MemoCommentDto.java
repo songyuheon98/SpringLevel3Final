@@ -8,6 +8,9 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 클라이언트에게 반환할 댓글 정보를 담은 DTO
+ */
 @Getter
 @Setter
 public class MemoCommentDto {

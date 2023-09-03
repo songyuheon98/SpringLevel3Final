@@ -21,6 +21,9 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
+/**
+ * JWT 토큰을 생성하고 검증하는 컴포넌트
+ */
 @Component
 public class JwtUtil {
     // Header KEY 값
@@ -40,12 +43,23 @@ public class JwtUtil {
     // 로그 설정
     public static final Logger logger = LoggerFactory.getLogger("JWT 관련 로그");
 
+    /**
+     * Bean 이 생성된 후 초기화를 수행하는 메서드
+     * Base64 Decode 된 SecretKey를 key 변수에 할당
+     * JWT 토큰을 생성할 때 사용할 SecretKey를 key 변수에 할당
+     */
     @PostConstruct
     public void init() {
         byte[] bytes = Base64.getDecoder().decode(secretKey);
         key = Keys.hmacShaKeyFor(bytes);
     }
-    // 토큰 생성
+
+    /**
+     * JWT 토큰을 생성하는 메서드.
+     * @param username 사용자 식별자값(ID)
+     * @param role 사용자 권한
+     * @return JWT 토큰
+     */
     public String createToken(String username, UserRoleEnum role) {
         Date date = new Date();
 
@@ -59,8 +73,11 @@ public class JwtUtil {
                         .compact();
     }
     // JWT Cookie 에 저장
+
     /**
-     * JWT 토큰을 Cookie로 클라이언트에게 전송하는 메서드.
+     * JWT 토큰을 Cookie에 저장하는 메서드
+     * @param token JWT 토큰
+     * @param res HttpServletResponse 객체
      */
     public void addJwtToCookie(String token, HttpServletResponse res) {
         try {
@@ -80,7 +97,13 @@ public class JwtUtil {
     }
 
 
-    // JWT 토큰 substring
+    /**
+     * JWT 토큰에서 Bearer 접두어를 제거하는 메서드
+     * @param tokenValue JWT 토큰
+     * @return Bearer 접두어가 제거된 JWT 토큰
+     * @throws NullPointerException Bearer 접두어가 없는 경우
+     * @throws StringIndexOutOfBoundsException Bearer 접두어가 비어있는 경우
+     */
     public String substringToken(String tokenValue) {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
@@ -89,7 +112,11 @@ public class JwtUtil {
         throw new NullPointerException("Not Found Token");
     }
 
-    // 토큰 검증
+    /**
+     * JWT 토큰의 유효성을 검사하는 메서드
+     * @param token JWT 토큰
+     * @return 유효성 검사 결과
+     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -107,10 +134,30 @@ public class JwtUtil {
     }
     // 토큰에서 사용자 정보 가져오기
 // 토큰에서 사용자 정보 가져오기
+
+    /**
+     * JWT 토큰에서 사용자 정보를 추출하는 메서드
+     * @param token JWT 토큰
+     * @return 사용자 정보
+     */
     public Claims getUserInfoFromToken(String token) {
+        /**
+         * Claims는 JWT 토큰에서 사용자 정보를 담고 있는 객체
+         * Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody() 를 사용하여
+         * 토큰에서 사용자 정보를 추출하여 반환
+         */
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
+    /**
+     * Request Header에서 JWT 토큰을 가져오는 메서드
+     * @param req HttpServletRequest 객체
+     *            HttpServletRequest 객체의 getHeader() 메서드를 사용하여
+     *            Request Header에서 JWT 토큰을 가져옴
+     *            토큰이 없는 경우 null을 반환
+     * @return URLDecoder.decode() 를 사용하여 쿠키 값 디코딩 후 반환 (UTF-8) 인코딩 방식 사용
+     *
+     */
     public String getTokenFromRequest(HttpServletRequest req) {
         Cookie[] cookies = req.getCookies();
         if(cookies != null) {

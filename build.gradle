@@ -21,6 +21,17 @@ repositories {
     mavenCentral()
 }
 
+/**
+ * Spring Boot 의존성
+ * - spring-boot-starter-web
+ * - spring-boot-starter-thymeleaf
+ * - spring-boot-starter-data-jpa
+ * - spring-boot-starter-validation
+ * - spring-boot-starter-security
+ * - spring-boot-starter-test
+ * - lombok
+ * - MySQL
+ */
 dependencies {
     // JPA 설정
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -48,3 +59,12 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
